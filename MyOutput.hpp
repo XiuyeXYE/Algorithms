@@ -62,7 +62,7 @@ inline void print(T t,Args ...args){
 }
 
 template<typename T>
-inline void println(T *t,int len){
+inline void printlnArr(T *t,int len){
     print('[');
     for(int i=0;i<len-1;i++){
         print(t[i],',');
@@ -158,6 +158,16 @@ void swap(T *t1,T *t2){
     *t2 = t;
 }
 
+template<typename T>
+void createRandomArrayWithBase(T *t,int len,int base){
+    srand(time(nullptr));
+    for(int i=0;i<len;i++){
+        int rnd = rand()%base;
+        t[i] = rnd;
+        // print(rnd,' ');
+    }
+    // println();
+}
 
 template<typename T>
 void createRandomArray(T *t,int len){
