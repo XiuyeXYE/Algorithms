@@ -44,23 +44,28 @@ int compare_and_swap(int old,int expect,int *dest){
 	有可能现在addr指向内存的值已经改变,在执行compare_and_swap是不会成功的(why? cmpxchg sure that),
 	然后又循环读取,然后调用compare_and_swap,直到addr指向内存的值改变了(就是和old旧值不相等了)
 	
-	这个有个好处 一般不会阻塞线程了
+	这个有个好处 一般不会阻塞线程了--线程总是很忙,知道出现结果位置.
 */
 void increment(int *addr){
 	volatile int old = 0;
+	int i = 0;
 	do{
 		old = *addr;//这里是不是要保证可见性
+		i++;
 	}while(old != compare_and_swap(old,old+1,addr));
+	
+	cout << "this thread spin times : " << i << endl;
 }
+
 
 //每次加78下
 void f(int *a){
 	for(int i=0;i<78;i++){
 		increment(a);
 	}
-	cout << "this thread id : " << this_thread::get_id() << endl;
-	//this_thread::sleep_for(100s);//这个s怎么可以加在10后面呢? 暂停下可以在资源管理器看到线程数
 	
+	//this_thread::sleep_for(100s);//这个s怎么可以加在10后面呢? 暂停下可以在资源管理器看到线程数
+	cout << "this thread id : " << this_thread::get_id() << endl;
 }
 
 //猜测 s achievement
